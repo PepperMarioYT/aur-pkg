@@ -1,0 +1,50 @@
+name: Build AUR Helper
+
+# Trigger when manifest.json changes
+on:
+  push:
+    paths:
+      - 'manifest.json'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the repo
+      - uses: actions/checkout@v3
+
+      # 2. Install dependencies (jq, shc)
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq git build-essential
+
+      # 3. Make scripts executable
+      - name: Make scripts executable
+        run: chmod +x src/*.sh
+
+      # 4. Rollup: concatenate all scripts into one
+      - name: Rollup scripts
+        run: |
+          cat src/aur-search.sh > aur-helper
+          cat src/aur-install.sh >> aur-helper
+          cat src/aur-update.sh >> aur-helper
+          cat src/aur-list.sh >> aur-helper
+          cat src/aur-helper.sh >> aur-helper
+          chmod +x aur-helper
+
+      # 5. Optional: compile to binary using shc
+      - name: Compile to binary
+        run: |
+          sudo apt-get install -y shc
+          shc -f aur-helper -o aur-helper.bin
+
+      # 6. Upload artifacts (the single script and/or binary)
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: aur-helper-build
+          path: |
+            aur-helper
+            aur-helper.bin
