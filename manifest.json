@@ -1,0 +1,8 @@
+{
+  "name": "aur-pkg-helper",
+  "version": "0.0.1",
+  "description": "A modular Bash AUR helper",
+  "entry": "src/aur-helper.sh",
+  "author": "PepperMarioYT",
+  "license": "MIT"
+}
