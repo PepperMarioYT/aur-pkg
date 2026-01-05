@@ -1,0 +1,5 @@
+{
+  "aur_url": "https://aur.archlinux.org",
+  "build_dir": "/tmp/aur-builds",
+  "install_flags": "-si"
+}
